@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+
+@* Reusable card for displaying a single event with action links *@
+<li class="event-card">
+    <strong>@EventTitle</strong><br />
+
+    @* Navigation links to event detail and registration pages *@
+    <NavLink href="@($"/events/details/{Uri.EscapeDataString(EventTitle)}")">View Details</NavLink>
+    |
+    <NavLink href="@($"/events/register/{Uri.EscapeDataString(EventTitle)}")">Register</NavLink>
+</li>
+
+@code {
+    [Parameter]
+    public string EventTitle { get; set; } = string.Empty;
+}

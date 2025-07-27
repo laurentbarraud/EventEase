@@ -1,0 +1,38 @@
+@page "/events/register/{EventName}"
+@using EventEase.Models
+@inject SessionStateService SessionState
+@inject AttendanceService AttendanceTracker
+
+<div class="event-registration">
+    <h2>Register for @DecodedEventName</h2>
+    <p>Please fill out the form below to register for the event.</p>
+
+    <RegistrationForm OnRegister="HandleRegister" />
+
+    @if (successMessage != null)
+    {
+        <div class="alert alert-success mt-3">
+            🎉 @successMessage
+        </div>
+    }
+
+    <NavLink href="/events">Back to Event List</NavLink>
+</div>
+
+@code {
+    [Parameter]
+    public string EventName { get; set; } = "";
+
+    private string DecodedEventName => Uri.UnescapeDataString(EventName);
+
+    private string? successMessage;
+
+    private Task HandleRegister(RegistrationData registration)
+    {
+        SessionState.SetCurrentUser(registration);
+        AttendanceTracker.Register(DecodedEventName, registration);
+        successMessage = $"You are successfully registered, {registration.Name}!";
+
+        return Task.CompletedTask;
+    }
+}

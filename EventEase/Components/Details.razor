@@ -1,0 +1,75 @@
+@page "/events/details/{EventName}"
+@using EventEase.Models;
+@inject AttendanceService AttendanceTracker
+
+<div class="event-details">
+    @if (IsValidEventName)
+    {
+        <h2>Event Details for @DecodedEventName</h2>
+
+        @if (DecodedEventName.Equals("Music Festival at Fully July 15", StringComparison.OrdinalIgnoreCase))
+        {
+            <p>Summer festival in the streets of Fully: live concerts, festive vibes, and lots of good energy on July 15.</p>
+        }
+        else if (DecodedEventName.Equals("Art Exhibition in Sion July 20", StringComparison.OrdinalIgnoreCase))
+        {
+            <p>Discover contemporary and classic artwork in the cultural center of Sion on July 20.</p>
+        }
+        else if (DecodedEventName.Equals("Tech Conference in Martigny August 5", StringComparison.OrdinalIgnoreCase))
+        {
+            <p>A gathering of tech enthusiasts, startups, and digital experts in Martigny on August 5.</p>
+        }
+        else
+        {
+            <p>Description coming soon.</p>
+        }
+
+        <hr />
+        <p><strong>Registered :</strong> @Attendees.Count</p>
+
+        @if (Attendees.Count == 0)
+        {
+            <p><em>Be the first to register !</em></p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var attendee in Attendees)
+                {
+                    <li>@attendee.Name</li>
+                }
+            </ul>
+        }
+
+        <NavLink class="btn btn-success mt-3" href="@($"/events/register/{EventName}")">
+            Register
+        </NavLink>
+        <br>
+        <NavLink class="btn btn-link" href="/events">Back to Event List</NavLink>
+    }
+    else
+    {
+        <h2>Invalid Event Path</h2>
+        <p>The event name provided in the URL appears to be invalid or missing.</p>
+        <NavLink href="/events">← Return to Event List</NavLink>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string EventName { get; set; }
+
+    private string DecodedEventName => string.IsNullOrEmpty(EventName) 
+    ? string.Empty 
+    : Uri.UnescapeDataString(EventName.Replace("-", " "));
+
+    private bool IsValidEventName => !string.IsNullOrWhiteSpace(DecodedEventName);
+
+    private IReadOnlyList<RegistrationData> Attendees = new List<RegistrationData>();
+
+
+    protected override void OnInitialized()
+    {
+        Attendees = AttendanceTracker.GetAttendees(DecodedEventName);
+    }
+}

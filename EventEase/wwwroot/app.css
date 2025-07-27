@@ -1,0 +1,44 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fafafa; /* fond clair */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #007ACC;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.page {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row;
+    background-color: #ffffff;
+}
+
+.sidebar {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    width: 250px;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.top-row {
+    background-color: #eeeeee;
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.content {
+    margin-top: 1rem;
+}

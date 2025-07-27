@@ -1,0 +1,44 @@
+@page "/events"
+
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+
+<h3>Upcoming events</h3>
+
+@* Show a message when no events are available *@
+@if (Events == null || Events.Count == 0)
+{
+    <p>No upcoming events at the moment.</p>
+}
+else
+{
+    @* Use virtualization only when the list is longer than 10 *@
+    if (Events.Count > 10)
+    {
+        <div style="height:400px; overflow-y:auto;">
+            <Virtualize Items="@Events" ItemSize="50" Context="evt">
+                <ItemContent>
+                    <EventCard EventTitle="@evt" />
+                </ItemContent>
+            </Virtualize>
+        </div>
+    }
+    else
+    {
+        <ul>
+            @foreach (var evt in Events)
+            {
+                <EventCard EventTitle="@evt" />
+            }
+        </ul>
+    }
+}
+
+@code {
+    // Mocked list of event titles (can be replaced by API data)
+    private List<string> Events = new()
+    {
+        "Music-Festival-at-Fully-July-15",
+        "Art-Exhibition-in-Sion-July-20",
+        "Tech-Conference-in-Martigny-August-5",
+    };
+}

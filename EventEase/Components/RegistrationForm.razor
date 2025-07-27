@@ -1,0 +1,40 @@
+@using System.ComponentModel.DataAnnotations
+@using EventEase.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+
+<EditForm Model="@registrationModel" OnValidSubmit="HandleValidSubmit" FormName="EventRegistrationForm" novalidate>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group mb-3">
+        <label for="name">Name:</label>
+        <InputText @bind-Value="registrationModel.Name" id="name" class="form-control" />
+        <ValidationMessage For="@(() => registrationModel.Name)" FormName="EventRegistrationForm" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="email">Email:</label>
+        <InputText @bind-Value="registrationModel.Email" id="email" class="form-control" />
+        <ValidationMessage For="@(() => registrationModel.Email)" FormName="EventRegistrationForm" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+
+    @* Debug info: displays current values as user types *@
+    <p class="mt-3"><strong>Entered Name:</strong> @registrationModel.Name</p>
+    <p><strong>Entered Email:</strong> @registrationModel.Email</p>
+</EditForm>
+
+@code {
+    private RegistrationData registrationModel = new();
+
+    [Parameter]
+    public EventCallback<RegistrationData> OnRegister { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        await OnRegister.InvokeAsync(registrationModel);
+        registrationModel = new(); // Reset model after submit
+    }
+}
